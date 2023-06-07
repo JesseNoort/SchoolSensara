@@ -5,8 +5,8 @@ namespace TimeManageTool.DTOS;
 
 public class ActivityDTO : IDTO
 {
+    public int? Id { get; set; }
     public int UserId { get; set; }
     public int CustomerId { get; set; }
-    public List<int>? ProductId { get; set; }
-    public List<int>? TimeId { get; set; }
+    public DateTime DateTime { get; set; }
 }

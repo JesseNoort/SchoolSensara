@@ -2,14 +2,11 @@ using AutoMapper;
 using TimeManageTool.DTOS;
 using TimeManageTool.Models;
 
-namespace TimeManageTool.Data.Profiles;
+namespace TimeManageTool.Profiles;
 
-public class ActivityProfile : Profile
+public class ActivityProfile: BaseProfile<Activity, ActivityDTO>
 {
     public ActivityProfile()
     {
-        CreateMap<ActivityDTO, Activity>().ReverseMap();
-        CreateMap<Activity,ActivityDTO>();
     }
 }
-            

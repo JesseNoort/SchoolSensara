@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using TimeManageTool.Data;
+using TimeManageTool.Models;
 
 namespace TimeManageTool.Controllers;
 
@@ -13,8 +14,8 @@ namespace TimeManageTool.Controllers;
         where TRepository : IRepository<TEntity>
         where  TDTO: class,IDTO
     {
-        private readonly TRepository repository;
-        private readonly IMapper _mapper;
+        protected readonly TRepository repository;
+        protected readonly IMapper _mapper;
 
         public BaseController(TRepository repository, IMapper mapper)
         {
@@ -44,8 +45,9 @@ namespace TimeManageTool.Controllers;
 
         // PUT: api/[controller]/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, TEntity entity)
+        public async Task<IActionResult> Put(int id, TDTO dto)
         {
+            var entity = _mapper.Map<TEntity>(dto);
             if (id != entity.Id)
             {
                 return BadRequest();

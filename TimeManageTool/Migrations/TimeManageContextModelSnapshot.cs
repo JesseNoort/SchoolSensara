@@ -70,7 +70,7 @@ namespace TimeManageTool.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Location", b =>
@@ -90,7 +90,7 @@ namespace TimeManageTool.Migrations
 
                     b.HasIndex("OrganisationId");
 
-                    b.ToTable("Location", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Organisation", b =>
@@ -105,7 +105,7 @@ namespace TimeManageTool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisation", (string)null);
+                    b.ToTable("Organisations");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Product", b =>
@@ -120,7 +120,7 @@ namespace TimeManageTool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.ProductUsed", b =>
@@ -129,7 +129,7 @@ namespace TimeManageTool.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ActivityId")
+                    b.Property<int>("ActivityId")
                         .HasColumnType("int");
 
                     b.Property<int>("Amount")
@@ -153,7 +153,7 @@ namespace TimeManageTool.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ActivityId")
+                    b.Property<int>("ActivityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -188,7 +188,7 @@ namespace TimeManageTool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Activity", b =>
@@ -213,7 +213,7 @@ namespace TimeManageTool.Migrations
             modelBuilder.Entity("TimeManageTool.Models.Customer", b =>
                 {
                     b.HasOne("TimeManageTool.Models.Location", "Location")
-                        .WithMany()
+                        .WithMany("Customers")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -224,7 +224,7 @@ namespace TimeManageTool.Migrations
             modelBuilder.Entity("TimeManageTool.Models.Location", b =>
                 {
                     b.HasOne("TimeManageTool.Models.Organisation", "Organisation")
-                        .WithMany()
+                        .WithMany("Locations")
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -234,24 +234,32 @@ namespace TimeManageTool.Migrations
 
             modelBuilder.Entity("TimeManageTool.Models.ProductUsed", b =>
                 {
-                    b.HasOne("TimeManageTool.Models.Activity", null)
+                    b.HasOne("TimeManageTool.Models.Activity", "Activity")
                         .WithMany("Products")
-                        .HasForeignKey("ActivityId");
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TimeManageTool.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Activity");
 
                     b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Time", b =>
                 {
-                    b.HasOne("TimeManageTool.Models.Activity", null)
+                    b.HasOne("TimeManageTool.Models.Activity", "Activity")
                         .WithMany("Times")
-                        .HasForeignKey("ActivityId");
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.Activity", b =>
@@ -264,6 +272,21 @@ namespace TimeManageTool.Migrations
             modelBuilder.Entity("TimeManageTool.Models.Customer", b =>
                 {
                     b.Navigation("Activities");
+                });
+
+            modelBuilder.Entity("TimeManageTool.Models.Location", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
+            modelBuilder.Entity("TimeManageTool.Models.Organisation", b =>
+                {
+                    b.Navigation("Locations");
+                });
+
+            modelBuilder.Entity("TimeManageTool.Models.Product", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("TimeManageTool.Models.User", b =>

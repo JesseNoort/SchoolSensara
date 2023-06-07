@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace TimeManageTool.Migrations
 {
     /// <inheritdoc />
-    public partial class v6 : Migration
+    public partial class v14 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace TimeManageTool.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Organisation",
+                name: "Organisations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,12 +25,12 @@ namespace TimeManageTool.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organisation", x => x.Id);
+                    table.PrimaryKey("PK_Organisations", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -39,12 +39,12 @@ namespace TimeManageTool.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -53,12 +53,12 @@ namespace TimeManageTool.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -68,18 +68,18 @@ namespace TimeManageTool.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Location_Organisation_OrganisationId",
+                        name: "FK_Locations_Organisations_OrganisationId",
                         column: x => x.OrganisationId,
-                        principalTable: "Organisation",
+                        principalTable: "Organisations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "Customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -91,11 +91,11 @@ namespace TimeManageTool.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Customer_Location_LocationId",
+                        name: "FK_Customers_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -116,15 +116,15 @@ namespace TimeManageTool.Migrations
                 {
                     table.PrimaryKey("PK_Activity", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Activity_Customer_CustomerId",
+                        name: "FK_Activity_Customers_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Activity_User_UserId",
+                        name: "FK_Activity_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -138,7 +138,7 @@ namespace TimeManageTool.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
-                    ActivityId = table.Column<int>(type: "int", nullable: true)
+                    ActivityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,11 +147,12 @@ namespace TimeManageTool.Migrations
                         name: "FK_ProductUsed_Activity_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activity",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductUsed_Product_ProductId",
+                        name: "FK_ProductUsed_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -167,7 +168,7 @@ namespace TimeManageTool.Migrations
                     TimeEnd = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Description = table.Column<string>(type: "longtext", nullable: false),
                     timeSpend = table.Column<double>(type: "double", nullable: true),
-                    ActivityId = table.Column<int>(type: "int", nullable: true)
+                    ActivityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +177,8 @@ namespace TimeManageTool.Migrations
                         name: "FK_Time_Activity_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activity",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -191,13 +193,13 @@ namespace TimeManageTool.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customer_LocationId",
-                table: "Customer",
+                name: "IX_Customers_LocationId",
+                table: "Customers",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Location_OrganisationId",
-                table: "Location",
+                name: "IX_Locations_OrganisationId",
+                table: "Locations",
                 column: "OrganisationId");
 
             migrationBuilder.CreateIndex(
@@ -226,22 +228,22 @@ namespace TimeManageTool.Migrations
                 name: "Time");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Activity");
 
             migrationBuilder.DropTable(
-                name: "Customer");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Organisation");
+                name: "Organisations");
         }
     }
 }

@@ -18,62 +18,26 @@ namespace TimeManageTool.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     public class TimeController : BaseController<Time, TimeRepository, TimeDTO>
     {
-        protected readonly IMapper _mapper;
-        protected readonly TimeRepository _repository;
 
         public TimeController(TimeRepository repository, IMapper mapper) : base(repository, mapper)
         {
-            this._mapper = mapper;
-            this._repository = repository;
         }
-        
-        [HttpPost("/addtime")]
-        public async Task<ActionResult<Time>> Post(TimeDTO dto)
-        {
-            var entity = new Time();
-            if (dto.timeStart != null)
-            {
-                entity.TimeStart = Now;
-            }
 
-            entity.Description = dto.Description;
-            var get = nameof(Get);
-            await _repository.Add(entity);
-            return CreatedAtAction(get, new { id = entity.Id }, entity);
-        }
-        
-        [HttpPut("addtime/{id}")]
-        public async Task<IActionResult> Put(int id, TimeDTO entity)
+        [HttpPut("timeSet/{id}")]
+        public async Task<IActionResult> PutTime(int id, TimeDTO dto)
         {
-            var time =_mapper.Map<Time>(entity);
-            var check = _repository.Get(id);
-            if (check.Id == null)
+            var entity = _mapper.Map<Time>(dto);
+            if (id != entity.Id)
             {
                 return BadRequest();
             }
 
-            if (entity.timeStart != null)
+            if (entity.timeSpend == null && (entity.TimeStart !=null && entity.TimeEnd !=null))
             {
-                check.Result.TimeStart = entity.timeStart;
+                var ts = entity.TimeEnd - entity.TimeStart;
+                entity.timeSpend = ts.Value.TotalMinutes;
             }
-
-            if (entity.timeEnd != null)
-            {
-                check.Result.TimeEnd = entity.timeEnd;
-            }
-
-            if (entity.Description != null)
-            {
-                check.Result.Description = entity.Description;
-            }
-
-            if (check.Result.TimeEnd != null && check.Result.TimeStart != null)
-            {
-                var timeSpend = (check.Result.TimeEnd - check.Result.TimeEnd);
-                check.Result.timeSpend = timeSpend.GetValueOrDefault().TotalMinutes;
-            }
-            
-            await _repository.Update(check.Result);
+            await repository.Update(entity);
             return NoContent();
         }
 

@@ -14,16 +14,13 @@ namespace TimeManageTool.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
-    public class CustomerController : BaseController<Customer, CustomerRepository, CustomerDTO>
+    public class ProductUsedController : BaseController<ProductUsed, ProductUsedRepository, ProductUsedDTO>
     {
         
-        public CustomerController(CustomerRepository repository, IMapper mapper) : base(repository, mapper)
+        public ProductUsedController(ProductUsedRepository repository, IMapper mapper) : base(repository, mapper)
         {
 
         }
         
     }
 }
-
-
-

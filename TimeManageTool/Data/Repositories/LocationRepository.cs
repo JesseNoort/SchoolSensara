@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using TimeManageTool.Data.EFCore;
 using TimeManageTool.Models;
 
@@ -9,5 +11,11 @@ public class LocationRepository : EfCoreRepository<Location, TimeManageContext>
     {
 
     }
+
+    // public async Task<IEnumerable<Location>> GetAllWithIncludes()
+    // {
+    //     return await context.Set<Location>().Include(l => l.Organisation).ToListAsync();
+    // }
+    
     
 }

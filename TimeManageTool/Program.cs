@@ -1,13 +1,21 @@
 ﻿using System.Configuration;
+using AutoMapper;
 using TimeManageTool.Data;
 using Microsoft.EntityFrameworkCore;
 using TimeManageTool.Data.Repositories;
+using TimeManageTool.DTOS;
 using TimeManageTool.Models;
+using TimeManageTool.Profiles;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
 
 // Add services to the container.
 
@@ -17,7 +25,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(Program));
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new ActivityProfile());
+    mc.AddProfile(new CustomerProfile());
+    mc.AddProfile(new OrganisationProfile());
+    mc.AddProfile(new LocationProfile());
+    mc.AddProfile(new ProductProfile());
+    mc.AddProfile(new ProductUsedProfile());
+    mc.AddProfile(new TimeProfile());
+    mc.AddProfile(new UserProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+//builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<ActivityRepository>();
 builder.Services.AddScoped<CustomerRepository>();

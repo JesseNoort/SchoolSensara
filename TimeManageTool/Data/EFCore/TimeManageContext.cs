@@ -23,11 +23,31 @@ public class TimeManageContext:DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Customer>().ToTable("Customer");
-        modelBuilder.Entity<Location>().ToTable("Location");
-        modelBuilder.Entity<Organisation>().ToTable("Organisation");
-        modelBuilder.Entity<Product>().ToTable("Product");
-        modelBuilder.Entity<User>().ToTable("User");
+        modelBuilder.Entity<Customer>()
+            .HasMany(e => e.Activities)
+            .WithOne(e => e.Customer)
+            .HasForeignKey(e => e.CustomerId)
+            .HasPrincipalKey(e => e.Id);
+        modelBuilder.Entity<Location>()        
+            .HasMany(e => e.Customers)
+            .WithOne(e => e.Location)
+            .HasForeignKey(e => e.LocationId)
+            .HasPrincipalKey(e => e.Id);
+        modelBuilder.Entity<Organisation>()
+            .HasMany(e => e.Locations)
+            .WithOne(e => e.Organisation)
+            .HasForeignKey(e => e.OrganisationId)
+            .HasPrincipalKey(e => e.Id);
+        modelBuilder.Entity<Product>()
+            .HasMany(e => e.Products)
+            .WithOne(e => e.Product)
+            .HasForeignKey(e => e.ProductId)
+            .HasPrincipalKey(e => e.Id);
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.Activities)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .HasPrincipalKey(e => e.Id);
         modelBuilder.Entity<Time>().ToTable("Time");
         modelBuilder.Entity<Activity>().ToTable("Activity");
         modelBuilder.Entity<ProductUsed>().ToTable("ProductUsed");
